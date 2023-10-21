@@ -37,30 +37,18 @@ func (v *Validator) ValidateFromSpreadsheet(spreadsheetID, sheetName, destinatio
 		log.Println(err)
 		return
 	}
-
 	for _, username := range repoData {
 		// repoLink := repoLink + "/" + repoName
 		// destination = fmt.Sprintf("%s/fp%d", destination, k)
 		contents, err := v.GithubDomain.GetRepoContent(username, repoName)
 		if err != nil {
-			log.Println(err)
-			return err
+			log.Println(username, err)
+			continue
 		}
 		for _, content := range contents {
 			name := content.Name
 			if strings.HasSuffix(name, ".go") {
-				fileURL := fmt.Sprintf("https://raw.githubusercontent.com/%s/%s/master/%s", username, repoName, name)
-				downloadPath, err := v.GithubDomain.DownloadFile(username, name, fileURL)
-				if err != nil {
-					log.Println(err)
-					return err
-				}
-				command := []string{"go", "run"}
-				err = v.BashCommandRunnerDomain.RunCommand(command, downloadPath)
-				if err != nil {
-					log.Println(err)
-					return err
-				}
+				log.Println(username, "found")
 			}
 		}
 	}

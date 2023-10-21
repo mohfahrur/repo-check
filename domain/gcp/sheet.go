@@ -13,15 +13,18 @@ import (
 type SheetAgent interface {
 	ReadSpreadsheet(spreadsheetID, sheetName string) ([]string, error)
 }
+
 type SheetDomain struct {
 	SheetService *sheets.Service
 }
 
 func NewSheetDomain(creds string) *SheetDomain {
 	ctx := context.Background()
+
 	service, err := sheets.NewService(ctx,
 		option.WithScopes(sheets.SpreadsheetsScope),
 		option.WithCredentialsFile(creds))
+
 	if err != nil {
 		log.Fatalf("Unable to create Google Sheets service: %v", err)
 	}
@@ -55,7 +58,5 @@ func (s *SheetDomain) ReadSpreadsheet(spreadsheetID, sheetName string) (data []s
 			accountNames = append(accountNames, githubAccountName)
 		}
 	}
-	// repoAccountLinks = []string{"https://github.com/Kyushin45"}
-	// accountNames = []string{"Kyushin45"}
 	return accountNames, nil
 }
